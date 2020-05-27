@@ -3,21 +3,24 @@ from django.http import HttpResponse, Http404, JsonResponse
 from .models import Tweet
 
 def Home_View(request, *args, **kwargs):
-    return HttpResponse("<h1>HelloWOrls</h1>")
+    return render(request, "pages/home.html", context={}, status=200)
 
 def tweet_detail_view(request, tweet_id, *args, **kwargs):
     ''' REST API VIEW 
         consume by JS, reactnative etc 
         return JSON
     '''
-    try:
-        obj = Tweet.objects.get(id=tweet_id)
-    except:
-        raise Http404
-
     data = {
         "id": tweet_id,
-        "content": obj.content,
     }
+    status = 200
+    try:
+        obj = Tweet.objects.get(id=tweet_id)
+        data['content'] = obj.content
+    except:
+        data['message'] = "Not found"
+        status = 404
 
-    return JsonResponse(data) # json.dumps content_type="application/json"
+    
+
+    return JsonResponse(data, status=status) # json.dumps content_type="application/json"
