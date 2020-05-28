@@ -4,18 +4,18 @@
 Welcome to Tweetme
 
 <div id='tweets'>
-    replace me
+    Loding....
 </div>
 
 <script>
 const tweetsElement = document.getElementById("tweets")
-tweetsElement.innerHTML = 'Loading....'
+// tweetsElement.innerHTML = 'Loading....'
 
-var el1 = "<h1>Hi there 1</h1>"
-var el2 = "<h1>Hi there 2</h1>"
-var el3 = "<h1>Hi there 3</h1>"
+// var el1 = "<h1>Hi there 1</h1>"
+// var el2 = "<h1>Hi there 2</h1>"
+// var el3 = "<h1>Hi there 3</h1>"
 
-tweetsElement.innerHTML = el1 + el2 + el3 
+// tweetsElement.innerHTML = el1 + el2 + el3 
 
 
 const xhr = new XMLHttpRequest() // XMLHttpRequest is helpful to load someparts of the webpage with out reloading the webpage
@@ -23,12 +23,27 @@ const method = 'GET'
 const url = '/tweets'
 const responseType = "json"
 
+function formatTweetElement(tweet) {
+
+    var formattedTweet = "<div class='mb-4 tweet' id ='tweet-" + tweet.id + "'>" + "<p>" + tweet.content + "</p></div>"
+
+    return formattedTweet
+}
+
+
 xhr.responseType = responseType
 xhr.open(method, url)
 xhr.onload = function(){
     const ServerResponse = xhr.response
-    var listedItems = ServerResponse.response
-
+    const listedItems = ServerResponse.response // array 
+    var finalTweetStr = ""
+    var i;
+    for (i=0; i<listedItems.length; i++) {
+        var tweetObj = listedItems[i]
+        var currentItem = formatTweetElement(tweetObj)
+        finalTweetStr += currentItem
+    }
+    tweetsElement.innerHTML = finalTweetStr
     console.log(listedItems)
 }
 xhr.send()
