@@ -2,4 +2,36 @@
 
 {% block content %}
 Welcome to Tweetme
+
+<div id='tweets'>
+    replace me
+</div>
+
+<script>
+const tweetsElement = document.getElementById("tweets")
+tweetsElement.innerHTML = 'Loading....'
+
+var el1 = "<h1>Hi there 1</h1>"
+var el2 = "<h1>Hi there 2</h1>"
+var el3 = "<h1>Hi there 3</h1>"
+
+tweetsElement.innerHTML = el1 + el2 + el3 
+
+
+const xhr = new XMLHttpRequest() // XMLHttpRequest is helpful to load someparts of the webpage with out reloading the webpage
+const method = 'GET'
+const url = '/tweets'
+const responseType = "json"
+
+xhr.responseType = responseType
+xhr.open(method, url)
+xhr.onload = function(){
+    const ServerResponse = xhr.response
+    var listedItems = ServerResponse.response
+
+    console.log(listedItems)
+}
+xhr.send()
+</script>
+
 {% endblock content %}

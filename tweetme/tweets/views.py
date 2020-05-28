@@ -5,6 +5,15 @@ from .models import Tweet
 def Home_View(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
 
+def tweet_list_view(request, *args, **kwargs):
+    qs = Tweet.objects.all() #list of django objects
+    tweets_list = [{"id": x.id, "content": x.content} for x in qs]
+    data = {
+        "isUser": False,
+        "response": tweets_list
+    }
+    return JsonResponse(data)
+
 def tweet_detail_view(request, tweet_id, *args, **kwargs):
     ''' REST API VIEW 
         consume by JS, reactnative etc 
