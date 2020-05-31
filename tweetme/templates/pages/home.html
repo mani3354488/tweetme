@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Welcome to Tweetme
+<div class = "row text-center">
+    <div class="col">
+        <h1>Welcome to Tweetme
+        </h1>
+    </div>
+</div>
 
 <div id='tweets'>
     Loding....
@@ -34,7 +39,7 @@ function LikeBtn(tweet){
 
 function formatTweetElement(tweet) {
 
-    var formattedTweet = "<div class='mb-4 tweet' id ='tweet-" + tweet.id + "'>" + "<p>" + tweet.content + 
+    var formattedTweet = "<div class='col-12 border-top border-bottom py-3 mb-4 tweet' id ='tweet-" + tweet.id + "'>" + "<p>" + tweet.content + 
         "</p><div class='btn-group'>" + LikeBtn(tweet)+ "</div></div>"
 
     return formattedTweet
