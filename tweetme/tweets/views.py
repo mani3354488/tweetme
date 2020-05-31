@@ -1,10 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, JsonResponse
 from .models import Tweet
+from .forms import TweetForm
+
 import random
+
 
 def Home_View(request, *args, **kwargs):
     return render(request, "pages/home.html", context={}, status=200)
+
+def tweet_create_view(request, *args, **kwargs):
+    form = TweetForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        form = TweetForm()
+    return render(request, "components/forms.html", context={"form": form})
 
 def tweet_list_view(request, *args, **kwargs):
     qs = Tweet.objects.all() #list of django objects
