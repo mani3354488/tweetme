@@ -30,10 +30,22 @@ function handleTweetCreateFormDidSubmit(event) {
     event.preventDefault()
     const myForm = event.target
     const myFormData = new FormData(myForm)
-    for (var myItem of myFormData.entries()) {
-        console.log(myItem)
-    }
+    // for (var myItem of myFormData.entries()) {
+    //     console.log(myItem)
+    // }
     // console.log(event)
+    const url = myForm.getAttribute("action")
+    const method = myForm.getAttribute("method")
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, url)
+    xhr.onload = function(){
+        const ServerResponse = xhr.response
+        console.log(ServerResponse)
+        const tweetsEl = document.getElementById("tweets")
+        loadTweets(tweetsEl)
+    }
+    xhr.send(myFormData)
+
 }
 const tweetCreateFormEl = document.getElementById("tweet-create-form")
 tweetCreateFormEl.addEventListener("submit", handleTweetCreateFormDidSubmit)
