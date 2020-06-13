@@ -1,0 +1,8 @@
+{
+    "debug.inlineValues": true,
+    "debug.allowBreakpointsEverywhere": true,
+    "launch": {
+    
+    },
+    "workbench.view.alwaysShowHeaderActions": true
+}
