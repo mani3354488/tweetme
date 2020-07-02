@@ -10,7 +10,7 @@ class TweetActionSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     action = serializers.CharField()
 
-    def validation_action(self, value):
+    def validate_data(self, value):
         value = value.lower().strip() #'LIKE' -> 'like'
         if not value in TWEET_ACTION_OPTIONS:
             raise serializers.ValidationError("This is not a valid action for Tweet")
