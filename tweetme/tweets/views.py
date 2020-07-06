@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .forms import TweetForm
 from .models import Tweet
-from .serializers import TweetSerializer, TweetActionSerializer
+from .serializers import TweetSerializer, TweetActionSerializer, TweetCreateSerializer
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 # Create your views here.
@@ -21,7 +21,7 @@ def home_view(request, *args, **kwargs):
 # @authentication_classes([SessionAuthentication]) //an app authentication 
 @permission_classes([IsAuthenticated])
 def tweet_create_view(request, *args, **kwargs):
-    serializer = TweetSerializer(data=request.POST or None)
+    serializer = TweetCreateSerializer(data=request.POST or None)
     if serializer.is_valid(raise_exception=True):
         obj = serializer.save(user=request.user) 
         return Response(serializer.data, status=201)
@@ -112,19 +112,19 @@ def tweet_delete_view(request, tweet_id, *args, **kwargs):
     obj.delete()
     return Response({'message': 'Tweet Removed'}, status=200)
 
-@api_view(['POST']) 
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def tweet_action_view(request, *args, **kwargs):
     '''
-        id is required
-        tweets action are like, unlike, retweet
+    id is required.
+    Action options are: like, unlike, retweet
     '''
-    print(request.POST, request.data)
     serializer = TweetActionSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        data = serializer.validate_data
+        data = serializer.validated_data
         tweet_id = data.get("id")
         action = data.get("action")
+        content = data.get("content")
         qs = Tweet.objects.filter(id=tweet_id)
         if not qs.exists():
             return Response({}, status=404)
@@ -136,6 +136,11 @@ def tweet_action_view(request, *args, **kwargs):
         elif action == "unlike":
             obj.likes.remove(request.user)
         elif action == "retweet":
-            pass
-            
+            new_tweet = Tweet.objects.create(
+                user=request.user, 
+                parent=obj, 
+                content=content,
+                )
+            serializer = TweetSerializer(new_tweet)
+            return Response(serializer.data, status=200)            
     return Response({}, status=200)
